@@ -10,8 +10,8 @@ export const app = Express();
 
 app.set("trust proxy", true);
 
-// gzip圧縮: JS/CSS/HTML/JSONの転送サイズを大幅削減
-app.use(compression());
+// gzip圧縮: JS/CSS/HTML/JSONの転送サイズを大幅削減 (最高圧縮レベル適用)
+app.use(compression({ level: 9, threshold: 0 }));
 
 app.use(sessionMiddleware);
 app.use(bodyParser.json());

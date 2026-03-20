@@ -28,7 +28,7 @@ async function resizeAll(dir: string) {
         console.log(`Resizing ${file} -> width=${width}`);
         await sharp(srcPath)
           .resize(width)
-          .avif({ quality: 50 })
+          .avif({ quality: 40 })
           .toFile(outPath);
       }
     }
