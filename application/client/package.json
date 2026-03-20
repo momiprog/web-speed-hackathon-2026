@@ -5,8 +5,8 @@
   "license": "MPL-2.0",
   "author": "CyberAgent, Inc.",
   "scripts": {
-    "build": "NODE_ENV=development webpack",
-    "build:stats": "NODE_ENV=development ANALYZE=true webpack",
+    "build": "NODE_ENV=production webpack",
+    "build:stats": "NODE_ENV=production ANALYZE=true webpack",
     "typecheck": "tsc"
   },
   "dependencies": {

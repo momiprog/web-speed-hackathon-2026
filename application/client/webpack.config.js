@@ -132,12 +132,22 @@ const config = {
     },
   },
   optimization: {
-    minimize: false,
-    splitChunks: false,
+    minimize: true,
+    splitChunks: {
+      chunks: "all",
+      minSize: 10000,
+      maxSize: 5000000, // 5MB
+    },
     concatenateModules: true,
     usedExports: true,
     providedExports: true,
     sideEffects: true,
+    minimizer: [
+      new EsbuildPlugin({
+        target: "es2015",
+        css: true,
+      }),
+    ],
   },
   cache: false,
   ignoreWarnings: [
