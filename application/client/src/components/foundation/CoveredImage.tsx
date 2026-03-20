@@ -1,7 +1,6 @@
 import classNames from "classnames";
 import sizeOf from "image-size";
-import { load, ImageIFD } from "piexifjs";
-import { MouseEvent, RefCallback, useCallback, useId, useMemo, useState } from "react";
+import { MouseEvent, RefCallback, useCallback, useEffect, useId, useMemo, useState } from "react";
 
 import { Button } from "@web-speed-hackathon-2026/client/src/components/foundation/Button";
 import { Modal } from "@web-speed-hackathon-2026/client/src/components/modal/Modal";
@@ -28,16 +27,13 @@ export const CoveredImage = ({ src }: Props) => {
     return data != null ? sizeOf(Buffer.from(data)) : { height: 0, width: 0 };
   }, [data]);
 
-  const alt = useMemo(() => {
-    if (data == null || imageSize.type == null || !["jpg", "jpeg"].includes(imageSize.type)) {
-      return "";
-    }
-    try {
-      const exif = load(Buffer.from(data).toString("binary"));
-      const raw = exif?.["0th"]?.[ImageIFD.ImageDescription];
-      return raw != null ? new TextDecoder().decode(Buffer.from(raw, "binary")) : "";
-    } catch {
-      return "";
+  const [alt, setAlt] = useState("");
+
+  useEffect(() => {
+    if (data && imageSize.type && ["jpg", "jpeg"].includes(imageSize.type)) {
+      import("../../utils/worker_manager").then(({ WorkerManager }) => {
+        WorkerManager.request<string>("extractExif", data).then(setAlt).catch(() => setAlt(""));
+      });
     }
   }, [data, imageSize.type]);
 
@@ -47,14 +43,15 @@ export const CoveredImage = ({ src }: Props) => {
 
   const [containerSize, setContainerSize] = useState({ height: 0, width: 0 });
   const callbackRef = useCallback<RefCallback<HTMLDivElement>>((el) => {
+    if (!el) return;
     setContainerSize({
-      height: el?.clientHeight ?? 0,
-      width: el?.clientWidth ?? 0,
+      height: el.clientHeight,
+      width: el.clientWidth,
     });
   }, []);
 
   if (isLoading || data === null || blobUrl === null) {
-    return null;
+    return <div className="bg-cax-surface-subtle h-full w-full animate-pulse rounded-lg" />;
   }
 
   const containerRatio = containerSize.height / containerSize.width;

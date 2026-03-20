@@ -1,4 +1,5 @@
 import React, { Suspense, useCallback, useEffect, useId, useState } from "react";
+import { TimelineItemSkeleton } from "../components/timeline/TimelineItemSkeleton";
 import { Helmet, HelmetProvider } from "react-helmet";
 import { Route, Routes, useLocation, useNavigate } from "react-router";
 
@@ -87,7 +88,15 @@ const AppContainer = () => {
         newPostModalId={newPostModalId}
         onLogout={handleLogout}
       >
-        <Suspense fallback={<p>読込中...</p>}>
+        <Suspense
+          fallback={
+            <div className="space-y-4">
+              {[...Array(5)].map((_, i) => (
+                <TimelineItemSkeleton key={i} />
+              ))}
+            </div>
+          }
+        >
           <Routes>
             <Route element={<TimelineContainer />} path="/" />
             <Route

@@ -1,12 +1,11 @@
-import { initializeImageMagick, ImageMagick, MagickFormat } from "@imagemagick/magick-wasm";
 import magickWasm from "@imagemagick/magick-wasm/magick.wasm?binary";
-import { dump, insert, ImageIFD } from "piexifjs";
 
 interface Options {
-  extension: MagickFormat;
+  extension: any; // MagickFormat
 }
 
 export async function convertImage(file: File, options: Options): Promise<Blob> {
+  const { initializeImageMagick, ImageMagick, MagickFormat } = await import("@imagemagick/magick-wasm");
   const response = await fetch(magickWasm as unknown as string);
   const bytes = new Uint8Array(await response.arrayBuffer());
   await initializeImageMagick(bytes);
@@ -14,7 +13,7 @@ export async function convertImage(file: File, options: Options): Promise<Blob> 
   const byteArray = new Uint8Array(await file.arrayBuffer());
 
   return new Promise((resolve) => {
-    ImageMagick.read(byteArray, (img) => {
+    ImageMagick.read(byteArray, async (img) => {
       img.format = options.extension;
 
       const comment = img.comment;
@@ -25,6 +24,8 @@ export async function convertImage(file: File, options: Options): Promise<Blob> 
           return;
         }
 
+        const piexif = await import("piexifjs");
+        const { dump, insert, ImageIFD } = (piexif as any).default || piexif;
         // ImageMagick では EXIF の ImageDescription フィールドに保存されているデータが
         // 非標準の Comment フィールドに移されてしまうため
         // piexifjs を使って ImageDescription フィールドに書き込む
