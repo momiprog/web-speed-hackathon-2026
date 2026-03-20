@@ -1,11 +1,12 @@
-import { MouseEventHandler, useCallback } from "react";
+import { lazy, memo, MouseEventHandler, Suspense, useCallback, useMemo } from "react";
 import { Link, useNavigate } from "react-router";
 
-import { ImageArea } from "@web-speed-hackathon-2026/client/src/components/post/ImageArea";
-import { MovieArea } from "@web-speed-hackathon-2026/client/src/components/post/MovieArea";
-import { SoundArea } from "@web-speed-hackathon-2026/client/src/components/post/SoundArea";
 import { TranslatableText } from "@web-speed-hackathon-2026/client/src/components/post/TranslatableText";
 import { getProfileImagePath } from "@web-speed-hackathon-2026/client/src/utils/get_path";
+
+const ImageArea = lazy(() => import("@web-speed-hackathon-2026/client/src/components/post/ImageArea").then(m => ({ default: m.ImageArea })));
+const MovieArea = lazy(() => import("@web-speed-hackathon-2026/client/src/components/post/MovieArea").then(m => ({ default: m.MovieArea })));
+const SoundArea = lazy(() => import("@web-speed-hackathon-2026/client/src/components/post/SoundArea").then(m => ({ default: m.SoundArea })));
 
 const isClickedAnchorOrButton = (target: EventTarget | null, currentTarget: Element): boolean => {
   while (target !== null && target instanceof Element) {
@@ -29,7 +30,7 @@ interface Props {
   post: Models.Post;
 }
 
-export const TimelineItem = ({ post }: Props) => {
+export const TimelineItem = memo(({ post }: Props) => {
   const navigate = useNavigate();
 
   /**
@@ -45,11 +46,13 @@ export const TimelineItem = ({ post }: Props) => {
     [post, navigate],
   );
 
-  const formattedDate = new Intl.DateTimeFormat("ja-JP", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(new Date(post.createdAt));
+  const formattedDate = useMemo(() => {
+    return new Intl.DateTimeFormat("ja-JP", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    }).format(new Date(post.createdAt));
+  }, [post.createdAt]);
 
   return (
     <article className="hover:bg-cax-surface-subtle px-1 sm:px-4" onClick={handleClick}>
@@ -89,23 +92,27 @@ export const TimelineItem = ({ post }: Props) => {
           <div className="text-cax-text leading-relaxed">
             <TranslatableText text={post.text} />
           </div>
-          {post.images?.length > 0 ? (
-            <div className="relative mt-2 w-full">
-              <ImageArea images={post.images} />
-            </div>
-          ) : null}
-          {post.movie ? (
-            <div className="relative mt-2 w-full">
-              <MovieArea movie={post.movie} />
-            </div>
-          ) : null}
-          {post.sound ? (
-            <div className="relative mt-2 w-full">
-              <SoundArea sound={post.sound} />
-            </div>
-          ) : null}
+          <Suspense fallback={<div className="h-20 w-full animate-pulse bg-cax-surface-subtle rounded-lg mt-2" />}>
+            {post.images?.length > 0 ? (
+                <div className="relative mt-2 w-full">
+                <ImageArea images={post.images} />
+                </div>
+            ) : null}
+            {post.movie ? (
+                <div className="relative mt-2 w-full">
+                <MovieArea movie={post.movie} />
+                </div>
+            ) : null}
+            {post.sound ? (
+                <div className="relative mt-2 w-full">
+                <SoundArea sound={post.sound} />
+                </div>
+            ) : null}
+          </Suspense>
         </div>
       </div>
     </article>
   );
-};
+});
+
+TimelineItem.displayName = "TimelineItem";
