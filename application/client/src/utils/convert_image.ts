@@ -4,11 +4,23 @@ interface Options {
   extension: any; // MagickFormat
 }
 
+let isMagickInitialized = false;
+let magickInitPromise: Promise<void> | null = null;
+
 export async function convertImage(file: File, options: Options): Promise<Blob> {
   const { initializeImageMagick, ImageMagick } = await import("@imagemagick/magick-wasm");
-  const response = await fetch(magickWasm as unknown as string);
-  const bytes = new Uint8Array(await response.arrayBuffer());
-  await initializeImageMagick(bytes);
+
+  if (!isMagickInitialized) {
+    if (!magickInitPromise) {
+      magickInitPromise = (async () => {
+        const response = await fetch(magickWasm as unknown as string);
+        const bytes = new Uint8Array(await response.arrayBuffer());
+        await initializeImageMagick(bytes);
+        isMagickInitialized = true;
+      })();
+    }
+    await magickInitPromise;
+  }
 
   const byteArray = new Uint8Array(await file.arrayBuffer());
 

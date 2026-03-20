@@ -1,5 +1,3 @@
-import { gzip } from "pako";
-
 async function handleResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
     const responseJSON = await response.json().catch(() => null);
@@ -36,16 +34,13 @@ export async function sendFile<T>(url: string, file: File): Promise<T> {
 
 export async function sendJSON<T>(url: string, data: object): Promise<T> {
   const jsonString = JSON.stringify(data);
-  const uint8Array = new TextEncoder().encode(jsonString);
-  const compressed = gzip(uint8Array);
 
   const response = await fetch(url, {
     method: "POST",
     headers: {
-      "Content-Encoding": "gzip",
       "Content-Type": "application/json",
     },
-    body: compressed,
+    body: jsonString,
   });
   return handleResponse<T>(response);
 }

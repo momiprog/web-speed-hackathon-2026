@@ -4,12 +4,8 @@ import { Helmet, HelmetProvider } from "react-helmet";
 import { Route, Routes, useLocation, useNavigate } from "react-router";
 
 import { AppPage } from "@web-speed-hackathon-2026/client/src/components/application/AppPage";
-const AuthModalContainer = React.lazy(() =>
-  import(/* webpackChunkName: "Auth" */ "./AuthModalContainer"),
-);
-const NewPostModalContainer = React.lazy(() =>
-  import(/* webpackChunkName: "NewPost" */ "./NewPostModalContainer"),
-);
+import AuthModalContainer from "./AuthModalContainer";
+import NewPostModalContainer from "./NewPostModalContainer";
 import { fetchJSON, sendJSON } from "../utils/fetchers";
 import TimelineContainer from "./TimelineContainer";
 
