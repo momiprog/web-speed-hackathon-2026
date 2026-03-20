@@ -28,9 +28,10 @@ const isClickedAnchorOrButton = (target: EventTarget | null, currentTarget: Elem
  */
 interface Props {
   post: Models.Post;
+  isPriority?: boolean;
 }
 
-export const TimelineItem = memo(({ post }: Props) => {
+export const TimelineItem = memo(({ post, isPriority }: Props) => {
   const navigate = useNavigate();
 
   /**
@@ -95,12 +96,12 @@ export const TimelineItem = memo(({ post }: Props) => {
           <Suspense fallback={<div className="h-20 w-full animate-pulse bg-cax-surface-subtle rounded-lg mt-2" />}>
             {post.images?.length > 0 ? (
                 <div className="relative mt-2 w-full">
-                <ImageArea images={post.images} />
+                <ImageArea images={post.images} isPriority={isPriority} />
                 </div>
             ) : null}
             {post.movie ? (
                 <div className="relative mt-2 w-full">
-                <MovieArea movie={post.movie} />
+                <MovieArea movie={post.movie} isPriority={isPriority} />
                 </div>
             ) : null}
             {post.sound ? (

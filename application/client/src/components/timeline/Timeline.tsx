@@ -8,10 +8,10 @@ interface Props {
 export const Timeline = ({ timeline }: Props) => {
   return (
     <section>
-      {timeline.map((post) => {
+      {timeline.map((post, index) => {
         return (
           <IntersectionRender key={post.id} height="100px">
-            <TimelineItem post={post} />
+            <TimelineItem post={post} isPriority={index === 0} />
           </IntersectionRender>
         );
       })}
