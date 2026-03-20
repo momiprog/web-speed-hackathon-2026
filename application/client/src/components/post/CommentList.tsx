@@ -8,7 +8,10 @@ interface Props {
 export const CommentList = ({ comments }: Props) => {
   return (
     <div>
-      {comments.map((comment) => {
+      {comments.map((comment, index) => {
+        if (index < 3) {
+          return <CommentItem key={comment.id} comment={comment} />;
+        }
         return (
           <IntersectionRender key={comment.id} height="80px">
             <CommentItem comment={comment} />
