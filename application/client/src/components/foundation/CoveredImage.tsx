@@ -1,6 +1,5 @@
 import classNames from "classnames";
-import sizeOf from "image-size";
-import { MouseEvent, RefCallback, useCallback, useEffect, useId, useMemo, useState } from "react";
+import { MouseEvent, RefCallback, useCallback, useEffect, useId, useState } from "react";
 
 import { Button } from "@web-speed-hackathon-2026/client/src/components/foundation/Button";
 import { Modal } from "@web-speed-hackathon-2026/client/src/components/modal/Modal";
@@ -23,22 +22,35 @@ export const CoveredImage = ({ src }: Props) => {
 
   const { data, isLoading } = useFetch(src, fetchBinary);
 
-  const imageSize = useMemo(() => {
-    return data != null ? sizeOf(Buffer.from(data)) : { height: 0, width: 0 };
-  }, [data]);
-
+  const [imageSize, setImageSize] = useState({ height: 0, width: 0, type: undefined as string | undefined });
   const [alt, setAlt] = useState("");
+  const [blobUrl, setBlobUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    if (data && imageSize.type && ["jpg", "jpeg"].includes(imageSize.type)) {
-      import("../../utils/worker_manager").then(({ WorkerManager }) => {
-        WorkerManager.request<string>("extractExif", data).then(setAlt).catch(() => setAlt(""));
-      });
-    }
-  }, [data, imageSize.type]);
+    if (!data) return;
+    
+    const url = URL.createObjectURL(new Blob([data]));
+    setBlobUrl(url);
 
-  const blobUrl = useMemo(() => {
-    return data != null ? URL.createObjectURL(new Blob([data])) : null;
+    import("../../utils/worker_manager").then(async ({ WorkerManager }) => {
+      try {
+        // 画像サイズを Worker で取得
+        const size = await WorkerManager.request<any>("getImageSize", data.slice(0));
+        setImageSize(size);
+
+        // EXIF 解析
+        if (size.type && ["jpg", "jpeg"].includes(size.type)) {
+          const exifAlt = await WorkerManager.request<string>("extractExif", data.slice(0));
+          setAlt(exifAlt);
+        }
+      } catch (err) {
+        console.error("Worker error:", err);
+      }
+    });
+
+    return () => {
+      URL.revokeObjectURL(url);
+    };
   }, [data]);
 
   const [containerSize, setContainerSize] = useState({ height: 0, width: 0 });

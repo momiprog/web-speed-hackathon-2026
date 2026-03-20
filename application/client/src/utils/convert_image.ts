@@ -5,7 +5,7 @@ interface Options {
 }
 
 export async function convertImage(file: File, options: Options): Promise<Blob> {
-  const { initializeImageMagick, ImageMagick, MagickFormat } = await import("@imagemagick/magick-wasm");
+  const { initializeImageMagick, ImageMagick } = await import("@imagemagick/magick-wasm");
   const response = await fetch(magickWasm as unknown as string);
   const bytes = new Uint8Array(await response.arrayBuffer());
   await initializeImageMagick(bytes);
@@ -18,7 +18,7 @@ export async function convertImage(file: File, options: Options): Promise<Blob> 
 
       const comment = img.comment;
 
-      img.write((output) => {
+      await img.write(async (output) => {
         if (comment == null) {
           resolve(new Blob([output as Uint8Array<ArrayBuffer>]));
           return;
@@ -29,7 +29,7 @@ export async function convertImage(file: File, options: Options): Promise<Blob> 
         // ImageMagick では EXIF の ImageDescription フィールドに保存されているデータが
         // 非標準の Comment フィールドに移されてしまうため
         // piexifjs を使って ImageDescription フィールドに書き込む
-        if (options.extension === MagickFormat.Jpg) {
+        if (options.extension === "JPG" || options.extension === "JPEG") {
           const binary = Array.from(output as Uint8Array<ArrayBuffer>)
             .map((b) => String.fromCharCode(b))
             .join("");
@@ -38,7 +38,7 @@ export async function convertImage(file: File, options: Options): Promise<Blob> 
             .join("");
           const exifStr = dump({ "0th": { [ImageIFD.ImageDescription]: descriptionBinary } });
           const outputWithExif = insert(exifStr, binary);
-          const bytes = Uint8Array.from(outputWithExif.split("").map((c) => c.charCodeAt(0)));
+          const bytes = Uint8Array.from(outputWithExif.split("").map((c: string) => c.charCodeAt(0)));
           resolve(new Blob([bytes]));
         } else {
           resolve(new Blob([output as Uint8Array<ArrayBuffer>]));

@@ -1,4 +1,5 @@
 import Bluebird from "bluebird";
+import sizeOf from "image-size";
 import kuromoji, { type Tokenizer, type IpadicFeatures } from "kuromoji";
 import analyze from "negaposi-analyzer-ja";
 import { load, ImageIFD } from "piexifjs";
@@ -36,6 +37,9 @@ self.onmessage = async (e: MessageEvent) => {
       const alt = raw != null ? new TextDecoder().decode(Uint8Array.from(raw.split("").map((c: string) => c.charCodeAt(0)))) : "";
       
       self.postMessage({ id, result: alt });
+    } else if (type === "getImageSize") {
+      const size = sizeOf(Buffer.from(payload));
+      self.postMessage({ id, result: size });
     }
   } catch (error) {
     self.postMessage({ id, error: String(error) });

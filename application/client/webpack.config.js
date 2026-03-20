@@ -99,7 +99,6 @@ const config = {
       ],
     }),
     new HtmlWebpackPlugin({
-      inject: false,
       template: path.resolve(SRC_PATH, "./index.html"),
     }),
     new BundleAnalyzerPlugin({
@@ -146,7 +145,7 @@ const config = {
   optimization: {
     minimize: true,
     splitChunks: {
-      chunks: "async",
+      chunks: "all",
     },
     concatenateModules: false,
     usedExports: true,

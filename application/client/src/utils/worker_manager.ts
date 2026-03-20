@@ -27,7 +27,8 @@ export class WorkerManager {
     return new Promise((resolve, reject) => {
       this.resolvers.set(id, resolve);
       this.rejecters.set(id, reject);
-      worker.postMessage({ type, payload, id });
+      const transfer = payload instanceof ArrayBuffer ? [payload] : [];
+      worker.postMessage({ type, payload, id }, transfer);
     });
   }
 }
