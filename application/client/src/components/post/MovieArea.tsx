@@ -9,8 +9,9 @@ interface Props {
 export const MovieArea = ({ movie, isPriority }: Props) => {
   return (
     <div
-      className="border-cax-border bg-cax-surface-subtle relative h-full w-full overflow-hidden rounded-lg border"
+      className="border-cax-border bg-cax-surface-subtle relative w-full overflow-hidden rounded-lg border"
       data-movie-area
+      style={{ maxHeight: '60vh' }}
     >
       <PausableMovie src={getMoviePath(movie.id)} isPriority={isPriority} />
     </div>

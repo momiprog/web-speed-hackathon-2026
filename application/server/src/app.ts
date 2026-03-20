@@ -13,13 +13,10 @@ app.use(sessionMiddleware);
 app.use(bodyParser.json());
 app.use(bodyParser.raw({ limit: "10mb" }));
 
-app.use((_req, res, next) => {
-  res.header({
-    "Cache-Control": "max-age=0, no-transform",
-    Connection: "close",
-  });
+// APIルートのみ no-transform を適用（静的ファイルのキャッシュヘッダーを妨害しない）
+app.use("/api/v1", (_req, res, next) => {
+  res.header({ "Cache-Control": "no-transform" });
   return next();
-});
+}, apiRouter);
 
-app.use("/api/v1", apiRouter);
 app.use(staticRouter);

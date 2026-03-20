@@ -27,9 +27,9 @@ export const CoveredImage = ({ src, isPriority }: Props) => {
           alt={alt}
           className="h-full w-full object-cover"
           src={src}
-          loading={isPriority ? "eager" : "lazy"}
-          fetchPriority={isPriority ? "high" : undefined}
-          decoding={isPriority ? "sync" : "async"}
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
         />
 
         <button

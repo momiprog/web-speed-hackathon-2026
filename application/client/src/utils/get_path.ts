@@ -1,5 +1,6 @@
-export function getImagePath(imageId: string): string {
-  return `/images/${imageId}.avif`;
+export function getImagePath(imageId: string, width?: number): string {
+  const suffix = width ? `_w${width}` : "";
+  return `/images/${imageId}${suffix}.avif`;
 }
 
 export function getMoviePath(movieId: string): string {
@@ -10,6 +11,7 @@ export const getSoundPath = (soundId: string) => {
   return `/sounds/${soundId}.opus`;
 };
 
-export function getProfileImagePath(profileImageId: string): string {
-  return `/images/profiles/${profileImageId}.avif`;
+export function getProfileImagePath(profileImageId: string, width?: number): string {
+  const suffix = width ? `_w${width}` : "";
+  return `/images/profiles/${profileImageId}${suffix}.avif`;
 }

@@ -27,7 +27,9 @@ export const CommentItem = memo(({ comment }: Props) => {
           >
             <img
               alt={comment.user.profileImage.alt}
-              src={getProfileImagePath(comment.user.profileImage.id)}
+              src={getProfileImagePath(comment.user.profileImage.id, 64)}
+              width={48}
+              height={48}
               loading="lazy"
               decoding="async"
             />

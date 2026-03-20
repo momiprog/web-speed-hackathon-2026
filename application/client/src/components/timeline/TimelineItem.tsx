@@ -65,7 +65,9 @@ export const TimelineItem = memo(({ post, isPriority }: Props) => {
           >
             <img
               alt={post.user.profileImage.alt}
-              src={getProfileImagePath(post.user.profileImage.id)}
+              src={getProfileImagePath(post.user.profileImage.id, 64)}
+              width={64}
+              height={64}
               loading={isPriority ? "eager" : "lazy"}
               fetchPriority={isPriority ? "high" : undefined}
               decoding={isPriority ? "sync" : "async"}
