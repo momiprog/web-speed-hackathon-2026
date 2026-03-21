@@ -5,7 +5,10 @@ import { SyntheticEvent } from "react";
  */
 export const handleImageError = (e: SyntheticEvent<HTMLImageElement, Event>) => {
   const target = e.currentTarget;
-  if (target.src.includes("_w")) {
-    target.src = target.src.replace(/_w\d+/, "");
+  if (!target.dataset["errorHandled"]) {
+    target.dataset["errorHandled"] = "true";
+    if (target.src.includes("_w")) {
+      target.src = target.src.replace(/_w\d+/, "");
+    }
   }
 };
