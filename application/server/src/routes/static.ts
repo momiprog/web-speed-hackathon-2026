@@ -36,7 +36,7 @@ staticRouter.use(
 // SPA 対応のため、ファイルが存在しないときに index.html を返す
 staticRouter.use(history() as any);
 
-staticRouter.get("*", async (req, res, next) => {
+staticRouter.get(["/", "/index.html"], async (req, res, next) => {
   if (req.path === "/" || req.path === "/index.html") {
     try {
       let indexHtml = await fs.readFile(path.join(CLIENT_DIST_PATH, "index.html"), "utf-8");
