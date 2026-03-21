@@ -12,7 +12,7 @@ interface Props {
 /**
  * アスペクト比を維持したまま、要素のコンテンツボックス全体を埋めるように画像を拡大縮小します
  */
-export const CoveredImage = ({ src }: Props) => {
+export const CoveredImage = ({ src, isPriority = false }: Props) => {
   const dialogId = useId();
   // ダイアログの背景をクリックしたときに投稿詳細ページに遷移しないようにする
   const handleDialogClick = useCallback((ev: MouseEvent<HTMLDialogElement>) => {
@@ -28,9 +28,9 @@ export const CoveredImage = ({ src }: Props) => {
           alt={alt}
           className="h-full w-full object-cover"
           src={src}
-          loading="eager"
-          fetchPriority="high"
-          decoding="async"
+          loading={isPriority ? "eager" : "lazy"}
+          fetchPriority={isPriority ? "high" : "auto"}
+          decoding={isPriority ? "sync" : "async"}
           onError={handleImageError}
         />
 

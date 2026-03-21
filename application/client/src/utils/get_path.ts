@@ -1,6 +1,6 @@
-export function getImagePath(imageId: string, _width?: number): string {
-  // src の末尾に _w200.avif を付ける処理を一旦停止し、元のURLで画像が表示されるか確認
-  return `/images/${imageId}.avif`;
+export function getImagePath(imageId: string, width?: number): string {
+  const suffix = width ? `_w${width}` : "_w400";
+  return `/images/${imageId}${suffix}.avif`;
 }
 
 export function getMoviePath(movieId: string): string {
@@ -11,6 +11,7 @@ export const getSoundPath = (soundId: string) => {
   return `/sounds/${soundId}.opus`;
 };
 
-export function getProfileImagePath(profileImageId: string, _width?: number): string {
-  return `/images/profiles/${profileImageId}.avif`;
+export function getProfileImagePath(profileImageId: string, width?: number): string {
+  const suffix = width ? `_w${width}` : "_w64";
+  return `/images/profiles/${profileImageId}${suffix}.avif`;
 }
