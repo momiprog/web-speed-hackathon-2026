@@ -42,6 +42,7 @@ export const PostItem = memo(({ post }: Props) => {
                 loading="lazy"
                 decoding="async"
                 onError={handleImageError}
+                className="aspect-square"
               />
             </Link>
           </div>

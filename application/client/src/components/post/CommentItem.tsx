@@ -6,6 +6,12 @@ import { getProfileImagePath } from "@web-speed-hackathon-2026/client/src/utils/
 
 import { handleImageError } from "@web-speed-hackathon-2026/client/src/utils/error_handlers";
 
+const dateFormatter = new Intl.DateTimeFormat("ja-JP", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+});
+
 interface Props {
   comment: Models.Comment;
 }
@@ -31,6 +37,7 @@ export const CommentItem = memo(({ comment }: Props) => {
               loading="lazy"
               decoding="async"
               onError={handleImageError}
+              className="aspect-square"
             />
           </Link>
         </div>

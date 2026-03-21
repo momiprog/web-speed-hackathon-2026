@@ -6,10 +6,10 @@ import { getProfileImagePath } from "@web-speed-hackathon-2026/client/src/utils/
 
 import { handleImageError } from "@web-speed-hackathon-2026/client/src/utils/error_handlers";
 
-const ImageArea = lazy(() => import("@web-speed-hackathon-2026/client/src/components/post/ImageArea").then(m => ({ default: m.ImageArea })));
+import { ImageArea } from "@web-speed-hackathon-2026/client/src/components/post/ImageArea";
+
 const MovieArea = lazy(() => import("@web-speed-hackathon-2026/client/src/components/post/MovieArea").then(m => ({ default: m.MovieArea })));
 const SoundArea = lazy(() => import("@web-speed-hackathon-2026/client/src/components/post/SoundArea").then(m => ({ default: m.SoundArea })));
-
 const dateFormatter = new Intl.DateTimeFormat("ja-JP", {
     year: "numeric",
     month: "long",
@@ -76,6 +76,7 @@ export const TimelineItem = memo(({ post, isPriority }: Props) => {
               fetchPriority={isPriority ? "high" : undefined}
               decoding={isPriority ? "sync" : "async"}
               onError={handleImageError}
+              className="aspect-square"
             />
           </Link>
         </div>
