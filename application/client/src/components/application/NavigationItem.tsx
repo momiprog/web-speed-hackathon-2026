@@ -22,8 +22,8 @@ export const NavigationItem = ({ badge, href, icon, command, commandfor, text }:
         if (!dialog.open) {
           try {
             dialog.showModal();
-          } catch (err) {
-            console.error("Failed to open dialog:", err);
+          } catch (e) {
+            console.error("Dialog error ignored", e);
           }
         }
       }

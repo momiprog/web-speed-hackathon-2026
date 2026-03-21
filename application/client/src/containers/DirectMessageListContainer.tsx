@@ -1,4 +1,3 @@
-import { useId } from "react";
 import { Helmet } from "react-helmet";
 
 import { DirectMessageGate } from "@web-speed-hackathon-2026/client/src/components/direct_message/DirectMessageGate";
@@ -11,7 +10,7 @@ interface Props {
 }
 
 const DirectMessageListContainer = ({ activeUser, authModalId }: Props) => {
-  const newDmModalId = useId();
+  const newDmModalId = "dm-dialog-fixed";
 
   if (activeUser === null) {
     return (

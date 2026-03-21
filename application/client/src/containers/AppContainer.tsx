@@ -1,4 +1,4 @@
-import React, { Suspense, useCallback, useEffect, useId, useState } from "react";
+import React, { Suspense, useCallback, useEffect, useState } from "react";
 import { TimelineItemSkeleton } from "../components/timeline/TimelineItemSkeleton";
 import { HelmetProvider } from "react-helmet";
 import { Route, Routes, useLocation, useNavigate } from "react-router";
@@ -65,8 +65,8 @@ const AppContainer = () => {
     navigate("/");
   }, [navigate]);
 
-  const authModalId = useId();
-  const newPostModalId = useId();
+  const authModalId = "auth-dialog-fixed";
+  const newPostModalId = "new-post-dialog-fixed";
 
   return (
     <HelmetProvider>
