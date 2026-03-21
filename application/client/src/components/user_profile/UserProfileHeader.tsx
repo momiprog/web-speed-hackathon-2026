@@ -7,6 +7,11 @@ import { getProfileImagePath } from "@web-speed-hackathon-2026/client/src/utils/
 interface Props {
   user: Models.User;
 }
+const dateFormatter = new Intl.DateTimeFormat("ja-JP", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+});
 
 export const UserProfileHeader = ({ user }: Props) => {
   const [averageColor, setAverageColor] = useState<string | null>(null);
@@ -20,11 +25,7 @@ export const UserProfileHeader = ({ user }: Props) => {
   }, []);
 
   const formattedDate = useMemo(() => {
-    return new Intl.DateTimeFormat("ja-JP", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-    }).format(new Date(user.createdAt));
+    return dateFormatter.format(new Date(user.createdAt));
   }, [user.createdAt]);
 
   return (

@@ -7,6 +7,11 @@ import { useWs } from "@web-speed-hackathon-2026/client/src/hooks/use_ws";
 import { fetchJSON } from "@web-speed-hackathon-2026/client/src/utils/fetchers";
 import { getProfileImagePath } from "@web-speed-hackathon-2026/client/src/utils/get_path";
 
+const timeFormatter = new Intl.DateTimeFormat("ja-JP", {
+    hour: "2-digit",
+    minute: "2-digit",
+});
+
 interface Props {
   activeUser: Models.User;
   newDmModalId: string;
@@ -101,10 +106,7 @@ export const DirectMessageListPage = ({ activeUser, newDmModalId }: Props) => {
                             className="text-cax-text-subtle text-xs"
                             dateTime={lastMessage.createdAt}
                           >
-                            {new Intl.DateTimeFormat("ja-JP", {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                            }).format(new Date(lastMessage.createdAt))}
+                            {timeFormatter.format(new Date(lastMessage.createdAt))}
                           </time>
                         )}
                       </div>

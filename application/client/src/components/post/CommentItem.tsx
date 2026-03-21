@@ -12,11 +12,7 @@ interface Props {
 
 export const CommentItem = memo(({ comment }: Props) => {
   const formattedDate = useMemo(() => {
-    return new Intl.DateTimeFormat("ja-JP", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-    }).format(new Date(comment.createdAt));
+    return dateFormatter.format(new Date(comment.createdAt));
   }, [comment.createdAt]);
 
   return (

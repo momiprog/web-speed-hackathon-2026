@@ -10,24 +10,26 @@ const SoundArea = lazy(() => import("@web-speed-hackathon-2026/client/src/compon
 
 import { handleImageError } from "@web-speed-hackathon-2026/client/src/utils/error_handlers";
 
+const dateFormatter = new Intl.DateTimeFormat("ja-JP", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+});
+
 interface Props {
   post: Models.Post;
 }
 
 export const PostItem = memo(({ post }: Props) => {
   const formattedDate = useMemo(() => {
-    return new Intl.DateTimeFormat("ja-JP", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-    }).format(new Date(post.createdAt));
+    return dateFormatter.format(new Date(post.createdAt));
   }, [post.createdAt]);
 
   return (
     <article className="px-1 sm:px-4">
       <div className="border-cax-border border-b px-4 pt-4 pb-4">
         <div className="flex items-center justify-center">
-          <div className="shrink-0 grow-0 pr-2">
+          <div className="shrink-0 grow-0 pr-2 min-h-[56px] sm:min-h-[64px]">
             <Link
               className="border-cax-border bg-cax-surface-subtle block h-14 w-14 overflow-hidden rounded-full border hover:opacity-95 sm:h-16 sm:w-16"
               to={`/users/${post.user.username}`}

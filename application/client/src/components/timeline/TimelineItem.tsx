@@ -10,6 +10,12 @@ const ImageArea = lazy(() => import("@web-speed-hackathon-2026/client/src/compon
 const MovieArea = lazy(() => import("@web-speed-hackathon-2026/client/src/components/post/MovieArea").then(m => ({ default: m.MovieArea })));
 const SoundArea = lazy(() => import("@web-speed-hackathon-2026/client/src/components/post/SoundArea").then(m => ({ default: m.SoundArea })));
 
+const dateFormatter = new Intl.DateTimeFormat("ja-JP", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+});
+
 const isClickedAnchorOrButton = (target: EventTarget | null, currentTarget: Element): boolean => {
   while (target !== null && target instanceof Element) {
     const tagName = target.tagName.toLowerCase();
@@ -50,17 +56,13 @@ export const TimelineItem = memo(({ post, isPriority }: Props) => {
   );
 
   const formattedDate = useMemo(() => {
-    return new Intl.DateTimeFormat("ja-JP", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-    }).format(new Date(post.createdAt));
+    return dateFormatter.format(new Date(post.createdAt));
   }, [post.createdAt]);
 
   return (
     <article className="hover:bg-cax-surface-subtle px-1 sm:px-4" onClick={handleClick}>
       <div className="border-cax-border flex border-b px-2 pt-2 pb-4 sm:px-4">
-        <div className="shrink-0 grow-0 pr-2 sm:pr-4">
+        <div className="shrink-0 grow-0 pr-2 sm:pr-4 min-h-[48px] sm:min-h-[64px]">
           <Link
             className="border-cax-border bg-cax-surface-subtle block h-12 w-12 overflow-hidden rounded-full border hover:opacity-75 sm:h-16 sm:w-16"
             to={`/users/${post.user.username}`}
