@@ -43,21 +43,15 @@ const AppContainer = () => {
 
   const [activeUser, setActiveUser] = useState<Models.User | null>(null);
   useEffect(() => {
-    // 認証チェックにタイムアウトを設け、LCP遅延を防止
-    const fetchMe = fetchJSON<Models.User>("/api/v1/me");
-    const timeout = new Promise<never>((_, reject) => 
-      setTimeout(() => reject(new Error("Auth Timeout")), 2000)
-    );
-
-    Promise.race([fetchMe, timeout])
+    fetchJSON<Models.User>("/api/v1/me")
       .then((user) => {
         setActiveUser(user);
       })
       .catch((err) => {
-        console.warn("Auth check failed or timed out:", err);
+        console.warn("Auth check failed:", err.message);
         setActiveUser(null);
       });
-  }, [setActiveUser]);
+  }, []);
 
   const handleLogout = useCallback(async () => {
     await sendJSON("/api/v1/signout", {});
