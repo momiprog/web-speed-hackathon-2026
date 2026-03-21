@@ -50,7 +50,7 @@ const serveResizedImage = async (req: any, res: any, subDir: string = "") => {
     
     // 品質を下げて AVIF に変換
     const buffer = await sharpInstance
-      .avif({ quality: 50 })
+      .avif({ quality: 45 })
       .toBuffer();
     
     return res

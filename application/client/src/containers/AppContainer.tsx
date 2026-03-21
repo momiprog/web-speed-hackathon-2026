@@ -1,6 +1,6 @@
 import React, { Suspense, useCallback, useEffect, useId, useState } from "react";
 import { TimelineItemSkeleton } from "../components/timeline/TimelineItemSkeleton";
-import { Helmet, HelmetProvider } from "react-helmet";
+import { HelmetProvider } from "react-helmet";
 import { Route, Routes, useLocation, useNavigate } from "react-router";
 
 import { AppPage } from "@web-speed-hackathon-2026/client/src/components/application/AppPage";
@@ -42,19 +42,23 @@ const AppContainer = () => {
   }, [pathname]);
 
   const [activeUser, setActiveUser] = useState<Models.User | null>(null);
-  const [isLoadingActiveUser, setIsLoadingActiveUser] = useState(true);
   useEffect(() => {
-    void fetchJSON<Models.User>("/api/v1/me")
+    // 認証チェックにタイムアウトを設け、LCP遅延を防止
+    const fetchMe = fetchJSON<Models.User>("/api/v1/me");
+    const timeout = new Promise<never>((_, reject) => 
+      setTimeout(() => reject(new Error("Auth Timeout")), 2000)
+    );
+
+    Promise.race([fetchMe, timeout])
       .then((user) => {
         setActiveUser(user);
       })
-      .catch(() => {
+      .catch((err) => {
+        console.warn("Auth check failed or timed out:", err);
         setActiveUser(null);
-      })
-      .finally(() => {
-        setIsLoadingActiveUser(false);
       });
-  }, [setActiveUser, setIsLoadingActiveUser]);
+  }, [setActiveUser]);
+
   const handleLogout = useCallback(async () => {
     await sendJSON("/api/v1/signout", {});
     setActiveUser(null);
@@ -63,16 +67,6 @@ const AppContainer = () => {
 
   const authModalId = useId();
   const newPostModalId = useId();
-
-  if (isLoadingActiveUser) {
-    return (
-      <HelmetProvider>
-        <Helmet>
-          <title>読込中 - CaX</title>
-        </Helmet>
-      </HelmetProvider>
-    );
-  }
 
   return (
     <HelmetProvider>
