@@ -10,6 +10,7 @@ import { ImageArea } from "@web-speed-hackathon-2026/client/src/components/post/
 
 const MovieArea = lazy(() => import("@web-speed-hackathon-2026/client/src/components/post/MovieArea").then(m => ({ default: m.MovieArea })));
 const SoundArea = lazy(() => import("@web-speed-hackathon-2026/client/src/components/post/SoundArea").then(m => ({ default: m.SoundArea })));
+
 const dateFormatter = new Intl.DateTimeFormat("ja-JP", {
     year: "numeric",
     month: "long",
